@@ -13,26 +13,20 @@ using namespace std;
 */
 
 //Forme de la matrice dans le fichier:
+    //*  NBLIGNES, NBCOLONNES  *//
     //*  LIGNE,COLONNE,VALEUR  *//
     //*  LIGNE,COLONNE,VALEUR  *//
     //*          ...           *//
 
-
-string readLine(string fichier, int l)
-{
-    string line;
-    ifstream monFichier (fichier.c_str());
-
-    for(int i = 1 ; i <= l ; i++)
-    {
-        getline(monFichier, line);
-    }
-    return line;
-}
-
+//Lorsqu'une colonne est vide (pleine de 0) une val aléatoire entre 1 et 9 est rajoutée à la dernière ligne de cette colonne.
 void cGen(int nc, int nl, string fichier, int indice) //Generateur de matrices creuse.
 {
     int n(0);
+    int *checkCol = new int[nc];
+    for(int idxCheck = 0 ; idxCheck < nc ; idxCheck++)
+    {
+        checkCol[idxCheck] = 0;
+    }
 
     if(indice < 1 || indice > 9)indice = 5;
     ofstream monFichier (fichier.c_str());
@@ -45,15 +39,26 @@ void cGen(int nc, int nl, string fichier, int indice) //Generateur de matrices c
 
         for (int idxC = 0 ; idxC < nc ; idxC++)
         {
-            if((rand() % 10) < indice) n = 0;
+            if((rand() % 10) < indice)
+            {
+                if(checkCol[idxC] == 0 && idxL == nl-1)
+                {
+                    n = rand() % 10 + 1;
+                    monFichier << idxL << " " << idxC << " " << n <<endl;
+                    cout<< "Val ajoutee col: " << idxC <<endl;
+                }
+                else n = 0;
+            }
             else
             {
                 n = rand() % 10 + 1;
                 monFichier << idxL << " " << idxC << " " << n <<endl;
+                checkCol[idxC] = 1;
             }
 
         }
     }
+    delete checkCol;
 }
 
 
