@@ -32,44 +32,30 @@ string readLine(string fichier, int l)
 
 void cGen(int nc, int nl, string fichier, int indice) //Generateur de matrices creuse.
 {
-    int n(0), check(-1);
-    int *emptyC = new int [nc];
+    int n(0);
 
     if(indice < 1 || indice > 9)indice = 5;
     ofstream monFichier (fichier.c_str());
 
     srand (time(NULL));
 
-    monFichier << nl << ' ' << n << endl;
+    monFichier << nl << ' ' << nc << endl;
     for (int idxL = 0 ; idxL < nl ; idxL++)
     {
 
         for (int idxC = 0 ; idxC < nc ; idxC++)
         {
-            if(check != -1)emptyC[idxC] = check;
-            check = 0;
             if((rand() % 10) < indice) n = 0;
             else
             {
                 n = rand() % 10 + 1;
                 monFichier << idxL << " " << idxC << " " << n <<endl;
-                check = 1;
             }
 
         }
     }
-    int r(0), v(0);
-    for(int idx = 0; idx < nl; idx++)
-    {
-        if(emptyC[idx] == 0)
-        {
-            r = rand() %10;
-            v = rand() %10 + 1;
-
-
-        }
-    }
 }
+
 
 void pGen(int nc, int nl, string fichier) //Generateur de matrices pleine.
 {
