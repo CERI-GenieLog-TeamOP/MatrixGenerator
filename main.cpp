@@ -21,12 +21,8 @@ using namespace std;
 //Lorsqu'une colonne est vide (pleine de 0) une val aléatoire entre 1 et 9 est rajoutée à la dernière ligne de cette colonne.
 void cGen(int nc, int nl, string fichier, int indice) //Generateur de matrices creuse.
 {
-    int n(0);
-    int *checkCol = new int[nc];
-    for(int idxCheck = 0 ; idxCheck < nc ; idxCheck++)
-    {
-        checkCol[idxCheck] = 0;
-    }
+    int n(0), *grille, check(0), vn, ln;
+    grille = new int[nc];
 
     if(indice < 1 || indice > 9)indice = 5;
     ofstream monFichier (fichier.c_str());
@@ -37,28 +33,41 @@ void cGen(int nc, int nl, string fichier, int indice) //Generateur de matrices c
     for (int idxL = 0 ; idxL < nl ; idxL++)
     {
 
+        //On remplie la colonne de nombres randoms entre 0 et 10.
         for (int idxC = 0 ; idxC < nc ; idxC++)
         {
-            if((rand() % 10) < indice)
-            {
-                if(checkCol[idxC] == 0 && idxL == nl-1)
-                {
-                    n = rand() % 10 + 1;
-                    monFichier << idxL << " " << idxC << " " << n <<endl;
-                    cout<< "Val ajoutee col: " << idxC <<endl;
-                }
-                else n = 0;
-            }
-            else
-            {
-                n = rand() % 10 + 1;
-                monFichier << idxL << " " << idxC << " " << n <<endl;
-                checkCol[idxC] = 1;
-            }
 
+            if((rand() % 10) < indice) //Pourcentage de 0.
+            {
+                grille[idxC] = 0;
+            }
+            else grille[idxC] = rand() % 9 + 1;
         }
+
+        check = 0;
+
+        //Si toute la colonne est nulle.
+        for(int i = 0 ; i < nc ; i++)
+        {
+            if(grille[i] != 0)check = 1;
+        }
+
+        //On rajoute un nombre aléatoire à une ligne aléatoire
+        if(check == 0)
+        {
+            ln = rand() % 10;
+            vn = rand() % 9 + 1;
+
+            grille[ln] = vn;
+        }
+
+        //Insertion dans le fichier
+        for (int insC = 0 ; insC < nc ; insC++)
+        {
+            if(grille[insC]!=0) monFichier << idxL << ' ' << insC << ' ' << grille[insC] << endl;
+        }
+
     }
-    delete checkCol;
 }
 
 
@@ -142,5 +151,7 @@ int main ()
     cin>>type;
 
     if(type == "creuse")generateMatrixC();
-    if(type == "pleine")generateMatrixP();
+    else if(type == "pleine")generateMatrixP();
+    else return 0;
+
 }
